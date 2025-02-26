@@ -10,14 +10,14 @@ services:
     working_dir: /mg/api
     volumes:
       - ./api:/mg/api
-      - /mg/api/vendor # Ensures `vendor` folder is container-only
+      - /mg/api/vendor
     ports:
       - "8000:8000"
     depends_on:
       - mysql
     networks:
       - mg_network
-    entrypoint: ["sh", "/usr/local/bin/entrypoint.sh"] # Ensure Laravel starts correctly
+    entrypoint: ["sh", "/usr/local/bin/entrypoint.sh"]
 
   frontend:
     build:
