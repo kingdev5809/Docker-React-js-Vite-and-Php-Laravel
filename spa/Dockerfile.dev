@@ -1,0 +1,19 @@
+# Use Node.js as the base image
+FROM node:18-alpine
+
+# Set working directory inside the container
+WORKDIR /mg/spa
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Ensure dependencies are installed in the correct directory
+RUN npm install
+
+# Copy all files
+COPY . .
+
+# Expose port for Vite
+EXPOSE 3030
+
+CMD npm run dev
