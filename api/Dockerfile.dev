@@ -15,8 +15,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy app files
 COPY . .
 
-# Install Laravel dependencies
-RUN composer install
+# Ensure dependencies are installed
+RUN composer install --no-interaction --no-progress --prefer-dist
 
 # Expose port for Laravel
 EXPOSE 8000
