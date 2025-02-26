@@ -27,7 +27,6 @@ services:
     working_dir: /mg/spa
     volumes:
       - ./spa:/mg/spa
-      - /mg/spa/node_modules
     ports:
       - "3030:3030"
     depends_on:
