@@ -46,12 +46,6 @@ APP_ENV=local
 APP_DEBUG=true
 ```
 
-#### Frontend (`spa/.env`):
-
-```ini
-VITE_API_BASE_URL=http://localhost:8000/api
-```
-
 ### 3️⃣ Start the Docker Containers
 
 Run the following command to start everything in **development mode**:
