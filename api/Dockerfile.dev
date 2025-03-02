@@ -16,12 +16,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Ensure dependencies are installed
-RUN composer install --no-interaction --no-progress --prefer-dist
+# RUN composer install --no-interaction --no-progress --prefer-dist
 
 # Expose port for Laravel
 EXPOSE 8000
 
-# Set entrypoint
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/sh", "-c", "composer install && php artisan serve --host=0.0.0.0 --port=8000"]

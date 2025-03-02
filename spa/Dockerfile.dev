@@ -17,4 +17,5 @@ COPY . .
 EXPOSE 3030
 
 # Start the Vite development server
-CMD ["npm", "run", "dev", "--", "--host"]
+# ENTRYPOINT [ "/entrypoint.sh"]
+CMD ["/bin/sh", "-c", "npm install && npm run dev -- --host"]
