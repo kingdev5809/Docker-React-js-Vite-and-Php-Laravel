@@ -5,7 +5,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.prod
-    container_name: mg_backend
+    container_name: mg-prod-backend
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -15,38 +15,24 @@ services:
     depends_on:
       - mysql
     networks:
-      - mg_network
-
-  nginx:
-    image: nginx:alpine
-    container_name: mg_nginx
-    restart: unless-stopped
-    ports:
-      - "8082:80"
-    volumes:
-      - ./api:/var/www
-      - ./api/nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - backend
-    networks:
-      - mg_network
+      - mg-prod-network
 
   frontend:
     build:
       context: ./spa
       dockerfile: Dockerfile.prod
-    container_name: mg_frontend
+    container_name: mg-prod-frontend
     restart: unless-stopped
     ports:
       - "3802:80"
     depends_on:
       - backend
     networks:
-      - mg_network
+      - mg-prod-network
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mg-prod-mysql
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: e-navbatchi
@@ -54,8 +40,8 @@ services:
     ports:
       - "3317:3306"
     networks:
-      - mg_network
+      - mg-prod-network
 
 networks:
-  mg_network:
+  mg-prod-network:
     driver: bridge
