@@ -79,13 +79,13 @@ docker-compose logs mysql
 ### Stop & Remove Containers
 
 ```sh
-docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.yml down
 ```
 
 ### Rebuild Everything (including volumes)
 
 ```sh
-docker-compose -f docker-compose.dev.yml down -v
+docker-compose -f docker-compose.yml down -v
 ```
 
 ### Access the Backend Container
