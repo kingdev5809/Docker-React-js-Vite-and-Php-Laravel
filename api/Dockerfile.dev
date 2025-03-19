@@ -1,7 +1,7 @@
 # Development - PHP & Composer
 FROM php:8.2-cli
 
-WORKDIR /mg/api
+WORKDIR /Myapp/api
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \

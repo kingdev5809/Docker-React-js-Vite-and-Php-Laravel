@@ -5,47 +5,47 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
-    container_name: mg_backend
+    container_name: Myapp_backend
     restart: unless-stopped
-    working_dir: /mg/api
+    working_dir: /Myapp/api
     volumes:
-      - ./api:/mg/api
+      - ./api:/Myapp/api
     ports:
-      - "8000:8000"
+      - "${BACKEND_PORT}:8000"
     depends_on:
       - mysql
     networks:
-      - mg_network
+      - Myapp_network
 
   frontend:
     build:
       context: ./spa
       dockerfile: Dockerfile.dev
     tty: true
-    container_name: mg_frontend
+    container_name: Myapp_frontend
     restart: unless-stopped
-    working_dir: /mg/spa
+    working_dir: /Myapp/spa
     volumes:
-      - ./spa:/mg/spa
+      - ./spa:/Myapp/spa
     ports:
-      - "3030:3030"
+      - "${FRONTEND_PORT}:3030"
     depends_on:
       - backend
     networks:
-      - mg_network
+      - Myapp_network
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: Myapp_mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: e_navbatchi
+      MYSQL_DATABASE: Myapp
       MYSQL_ROOT_PASSWORD: 1111
     ports:
-      - "3317:3306"
+      - "${MYSQL_PORT}:3306"
     networks:
-      - mg_network
+      - Myapp_network
 
 networks:
-  mg_network:
+  Myapp_network:
     driver: bridge

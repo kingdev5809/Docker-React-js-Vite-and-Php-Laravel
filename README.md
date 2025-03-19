@@ -1,40 +1,14 @@
-# Laravel + React (Vite) - Docker Development Setup
+# Laravel + React (Vite) - Optimized Docker Setup
 
 ## 1️⃣ Install Dependencies
 
 Ensure **Docker** and **Docker Compose** are installed:
 
 ```sh
-docker --version
-docker-compose --version
+docker --version && docker-compose --version
 ```
 
-## 2️⃣ Create `.env` Files
-
-### Backend (`api/.env`)
-
-```ini
-APP_NAME=Laravel
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=mysql
-DB_HOST=mysql
-DB_PORT=3306
-DB_DATABASE=e_navbatchi
-DB_USERNAME=root
-DB_PASSWORD=1111
-```
-
-Generate the application key:
-
-```sh
-docker-compose exec backend php artisan key:generate
-```
-
-## 3️⃣ Project Structure
+## 2️⃣ Project Structure
 
 ```
 /project-root
@@ -45,13 +19,25 @@ docker-compose exec backend php artisan key:generate
 │── spa/Dockerfile.dev
 ```
 
-## 4️⃣ Start the Containers
+## 3️⃣ Create Environment Files
+
+Duplicate existing example files:
 
 ```sh
-docker-compose -f up --build -d
+cp api/.env.example api/.env
+cp spa/.env.example spa/.env
+cp /.env.example /.env
 ```
 
-# If for Production
+## 4️⃣ Start Containers
+
+### For development:
+
+```sh
+docker-compose up --build -d
+```
+
+### For production:
 
 ```sh
 docker-compose -f docker-compose.prod.yml up --build -d
@@ -63,80 +49,54 @@ Check running containers:
 docker ps
 ```
 
-## 5️⃣ Verify Services
+## 5️⃣ Backend & Database Setup
 
-### Backend (`http://localhost:8000`)
-
-Check logs:
-
-```sh
-docker-compose logs backend
-```
-
-Run migrations:
-
-```sh
-docker-compose exec backend php artisan migrate
-```
-
-### Frontend (`http://localhost:3030`)
-
-Check logs:
-
-```sh
-docker-compose logs frontend
-```
-
-### Database (MySQL - Port 3317)
-
-Connect via MySQL client:
-
-```sh
-docker-compose exec mysql mysql -u root -p
-```
-
-Enter password: `1111`
-
-## 6️⃣ Debugging & Common Commands
-
-### Restart Containers
-
-```sh
-docker-compose -f docker-compose.dev.yml restart
-```
-
-### Stop & Remove Containers
-
-```sh
-docker-compose down -v
-```
-
-### Access Backend Container
+Access the backend container:
 
 ```sh
 docker-compose exec backend sh
 ```
 
-### Run Laravel Commands
+Run migrations & seed:
 
 ```sh
-docker-compose exec backend php artisan cache:clear
-docker-compose exec backend php artisan migrate --seed
-docker-compose exec backend php artisan route:list
+php artisan key:generate
+php artisan migrate --seed
 ```
 
-### Generate Swagger API Docs
+## 6️⃣ Debugging & Common Commands
+
+### Restart containers:
 
 ```sh
-docker-compose exec backend php artisan l5-swagger:generate
+docker-compose restart
 ```
 
-Docs available at: `http://localhost:8000/api/documentation`
+### Stop & remove all containers:
 
-### Reinstall Frontend Dependencies
+```sh
+docker-compose down -v
+```
+
+### Access backend container:
+
+```sh
+docker-compose exec backend sh
+```
+
+### Run Laravel commands:
+
+```sh
+php artisan cache:clear
+php artisan route:list
+```
+
+Swagger API Docs: [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+
+### Reinstall frontend dependencies:
 
 ```sh
 docker-compose exec frontend sh -c "npm install && npm run dev -- --host"
 ```
 
-Now your **Laravel + React (Vite)** project is running with Docker in **development mode**. 🚀
+Now your **Laravel + React (Vite)** project is running with **Docker** in development mode with fewer steps and better optimization. 🚀
