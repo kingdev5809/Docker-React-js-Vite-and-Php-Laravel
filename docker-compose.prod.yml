@@ -34,8 +34,8 @@ services:
       context: .
       dockerfile: spa/Dockerfile.prod
     ports:
-      - "3000:80"
-      - "8000:8000"
+      - "${FRONTEND_PORT}:80"
+      - "${BACKEND_PORT}:8000"
     volumes:
       - ./api/public:/var/www/public
     depends_on:
@@ -52,7 +52,7 @@ services:
       MYSQL_DATABASE: docker-project
       MYSQL_ROOT_PASSWORD: 1111
     ports:
-      - "3317:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
