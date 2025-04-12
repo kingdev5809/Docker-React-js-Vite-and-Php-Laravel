@@ -5,52 +5,48 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.prod
-    container_name: Myapp-prod-backend
+    container_name: app-backend
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - ./api:/var/www
     expose:
       - "9000"
-    command: >
-      sh -c "composer install --no-dev --optimize-autoloader &&
-             php-fpm"
     depends_on:
       - mysql
     networks:
-      - Myapp-prod-network
+      - app-network
 
   frontend:
     build:
-      context: ./spa
-      dockerfile: Dockerfile.prod
-    container_name: Myapp-prod-frontend
+      context: .
+      dockerfile: spa/Dockerfile.prod
+    container_name: app-frontend
     restart: unless-stopped
-    expose:
-      - "3000"
     networks:
-      - Myapp-prod-network
+      - app-network
 
   nginx:
     image: nginx:alpine
-    container_name: Myapp-prod-nginx
+    container_name: app-nginx
     restart: unless-stopped
+    build:
+      context: .
+      dockerfile: spa/Dockerfile.prod
     ports:
-      - "3000:3000"
+      - "3000:80"
       - "8000:8000"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./spa/dist:/usr/share/nginx/html
       - ./api/public:/var/www/public
     depends_on:
       - frontend
       - backend
     networks:
-      - Myapp-prod-network
+      - app-network
 
   mysql:
     image: mysql:8.0
-    container_name: Myapp-prod-mysql
+    container_name: app-mysql
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: docker-project
@@ -60,11 +56,11 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - Myapp-prod-network
+      - app-network
 
 volumes:
   mysql-data:
 
 networks:
-  Myapp-prod-network:
+  app-network:
     driver: bridge

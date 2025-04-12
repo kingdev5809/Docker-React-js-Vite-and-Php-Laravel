@@ -2,13 +2,14 @@ FROM node:18-alpine AS build-stage
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY spa/package.json spa/package-lock.json ./
 RUN npm install
 
-COPY . .
+COPY spa .
 RUN npm run build
 
 
 FROM nginx:alpine
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
