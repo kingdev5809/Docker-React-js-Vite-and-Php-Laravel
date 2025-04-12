@@ -5,7 +5,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.prod
-    container_name: Myapp-prod-backend
+    container_name: app-backend
     restart: unless-stopped
     working_dir: /var/www
     volumes:
@@ -15,33 +15,52 @@ services:
     depends_on:
       - mysql
     networks:
-      - Myapp-prod-network
+      - app-network
 
   frontend:
     build:
-      context: ./spa
-      dockerfile: Dockerfile.prod
-    container_name: Myapp-prod-frontend
+      context: .
+      dockerfile: spa/Dockerfile.prod
+    container_name: app-frontend
     restart: unless-stopped
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: app-nginx
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: spa/Dockerfile.prod
     ports:
-      - "3802:80"
+      - "3000:80"
+      - "8000:8000"
+    volumes:
+      - ./api/public:/var/www/public
     depends_on:
+      - frontend
       - backend
     networks:
-      - Myapp-prod-network
+      - app-network
 
   mysql:
     image: mysql:8.0
-    container_name: Myapp-prod-mysql
+    container_name: app-mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: e-navbatchi
+      MYSQL_DATABASE: docker-project
       MYSQL_ROOT_PASSWORD: 1111
     ports:
       - "3317:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
     networks:
-      - Myapp-prod-network
+      - app-network
+
+volumes:
+  mysql-data:
 
 networks:
-  Myapp-prod-network:
+  app-network:
     driver: bridge
