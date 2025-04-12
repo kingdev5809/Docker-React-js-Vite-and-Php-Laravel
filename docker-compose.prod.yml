@@ -12,6 +12,9 @@ services:
       - ./api:/var/www
     expose:
       - "9000"
+    command: >
+      sh -c "composer install --no-dev --optimize-autoloader &&
+             php-fpm"
     depends_on:
       - mysql
     networks:
@@ -23,9 +26,24 @@ services:
       dockerfile: Dockerfile.prod
     container_name: Myapp-prod-frontend
     restart: unless-stopped
+    expose:
+      - "3000"
+    networks:
+      - Myapp-prod-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: Myapp-prod-nginx
+    restart: unless-stopped
     ports:
-      - "3802:80"
+      - "3000:3000"
+      - "8000:8000"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./spa/dist:/usr/share/nginx/html
+      - ./api/public:/var/www/public
     depends_on:
+      - frontend
       - backend
     networks:
       - Myapp-prod-network
@@ -35,12 +53,17 @@ services:
     container_name: Myapp-prod-mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: e-navbatchi
+      MYSQL_DATABASE: docker-project
       MYSQL_ROOT_PASSWORD: 1111
     ports:
       - "3317:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
     networks:
       - Myapp-prod-network
+
+volumes:
+  mysql-data:
 
 networks:
   Myapp-prod-network:
